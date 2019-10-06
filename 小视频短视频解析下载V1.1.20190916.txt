@@ -1,0 +1,307 @@
+小视频短视频解析下载V1.1.20190916
+
+/*
+功能：解析国内外大多的短视频小视频网站和一些社交网站的视频，同时提供在线观看和无水印下载。
+
+V1.1.20190916更新：
+字体从font-size: 4.2vw缩小到font-size: 3.5vw；
+行的高度缩小，改动代码：
+margin:3.78vw 2.1vw变成了margin:1.5vw 1vw。
+从line-height: 12.6vw缩小到line-height: 8.5vw。
+
+每行高度=圆圈的高度+边距*2+0.5左右，比如这里
+8.5=5+1.5*2+0.5=8.5
+*/
+
+var weibo =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#FF7F00;margin:1.5vw 1vw;">微博</span>'
+
+var miaopai =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#ffa751;margin:1.5vw 1vw;">秒拍</span>'
+
+var douyin =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#353728;margin:1.5vw 1vw;">抖音</span>'
+
+var youtube =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#FF3D2E;margin:1.5vw 1vw;">YouTube</span>'
+
+var facebook =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#D9C099;margin:1.5vw 1vw;">脸书</span>'
+
+var twitter =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#0078FF;margin:1.5vw 1vw;">推特</span>'
+
+var guowai_down =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#00ADA7;margin:1.5vw 1vw;">国外</span>'
+
+var guonei_down =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#8DD4DB;margin:1.5vw 1vw;">国内</span>'
+
+var down =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#E54661;margin:1.5vw 1vw;">全下</span>'
+
+var apis = [{
+        name: "———主打国外———",
+        url: "",
+        title: "分割线，下面的主要针对国外视频站"
+    },{
+        name: guowai_down + "vlogdownloader",
+        url: "https://www.vlogdownloader.com/download.html?url=",
+        title: "再转就开VPN，主打国外站,支持tiktok和抖音, YouTube，tumblr, facebook, twitter, instagram,vimeo,Pandora TV,naver TV,vlive TV,91porn、pornhub、xvideos等"
+    },{
+        name: guowai_down + "bitdownloader",
+        url: "https://bitdownloader.com/download?video=",
+        title: "再转就开vpn，主打国外站,支持YouTube，Facebook，Instagram，Coub，Vimeo,vlive TV,91porn等等，自己探索"
+	},{
+        name: guowai_down + "qdownloader.io",
+        url: "https://qdownloader.io/download?video=",
+        title: "主打国外，有些国内的也可以。More than 800 Websites Supported，如YouTube Facebook Instagram Vimeo LiveLeak BiliBili等"
+    },{
+        name: "———主打国内———",
+        url: "",
+        title: "分割线，下面的主要针对国内视频站"
+    }, {
+        name: down + "parsevideo",
+        url: "https://www.parsevideo.com/#",
+        title: "需开VPN。可以解析国内主流的APP短视频，比如：抖音 快手 微博 微视、tumblr, facebook, twitter, instagram等，也支持解析91porn等"
+    }, {
+        name: down + "VideoFk视频解析下载",
+        url: "https://www.videofk.com/index-video-download/search?url=",
+        title: "几乎国内国外都支持"
+    },{
+        name: down + "iiilab短视频解析下载",
+        url: "https://douyin.iiilab.com/?=",
+        title: "需手动复制链接搜索解析，本站已支持解析下载微博、秒拍、小咖秀、晃咖、微视、全民小视频、全民K歌、美拍、哔哩哔哩、趣多拍、网易云音乐、陌陌、Instagram、YouTube、Facebook、Twitter、映客、小影、小红书等平台的视频, 请通过页面顶部右侧导航菜单选择."
+    }, {
+        name: guonei_down + "视频鱼解析下载",
+        url: "http://m.shipinyu.cn/video?url=",
+        title: "支持的站点：BiliBili AcFun 优酷网 腾讯视频 微博秒拍 搜狐 乐视 百度视频 土豆网 芒果tv 凤凰视频 新浪视频 56 酷6 央视网 天天看看 网易视频 百度贴吧 爆米花网 Dilidili 豆瓣 斗鱼 熊猫 风行网 爱奇艺 激动网 秒拍 PPTV 企鹅直播 战旗"
+    },{
+        name: guonei_down + "分享网去水印下载",
+        url: "https://dy.fxw.la/?url=",
+        title: "需手动复制链接。支持国内几乎全部，支持平台：抖音、快手、火山、喜刮、疲疲瞎、微视、投调、火锅、阳光宽频、板凳、快狗、趣多拍、土豆、小红书、皮皮搞笑、全民K歌、比心、猫神、微博视频、秒拍、美拍、陌陌、映客、看点视频、小咖秀、最右、小影等短视频平台！"
+    },{
+        name: guonei_down + "FLVCD硕鼠视频下载1",
+        url: "http://www.flvcd.com/parse.php?format=&kw=",
+        title: "主打国内+YouTube等，支持84个网站的下载(持续更新)"
+    }, {
+        name: guonei_down + "FLVCD硕鼠视频下载2",
+        url: "http://www.flvcd.com/parse.php?kw=",
+        title: "主打国内+YouTube等，支持84个网站的下载(持续更新)"
+    },{
+        name: guonei_down + "皮克斯无水印解析下载",
+        url: "http://97pix.com?kw=",
+        title: "需手动复制链接，能解析99%以上的视频"
+    },{
+        name: guonei_down + "PickFrom视频图片下载器",
+        url: "https://zh.pickfrom.net/pickvideo?kw=",
+        title: "需手动复制链接，支持下载Youtube, 抖音，facebook，twitter，instagram等流行网站里的视频和图片"
+    },{
+        name: guonei_down + "微博党视频解析下载",
+        url: "http://weibodang.cn/dang.php?url=",
+        title: "需手动复制链接，乐视 微博/秒拍/酷燃 腾讯视频 优酷/土豆"
+    },{
+        name: guonei_down + "downfi小视频下载",
+        url: "http://www.downfi.com/video/s?wd=",
+        title: "主打国内"
+    },{
+        name: guonei_down + "V视频助手",
+        url: "http://v.ranks.xin/?wd=",
+        title: "需手动复制链接搜索解析，支持下载腾讯视频、秒拍视频、微博视频、今日头条、阳光宽频网、快手、微信、百度视频、梨视频、西瓜视频等"
+    },{
+        name: "———只针对单个———",
+        url: "",
+        title: "分割线，下面的主要只针对具体单个站的解析下载"
+    }, {
+        name: facebook + "Down FB video",
+        url: "https://downvideo.net/?kw=",
+        title: "针对facebook，需手动复制链接搜索解析"
+    },{
+        name: facebook + "FB down",
+        url: "https://fbdown.net/?url=",
+        title: "针对facebook，需手动复制链接搜索解析"
+    },{
+        name: twitter + "Twitter down",
+        url: "https://twdown.net/?kw=",
+        title: "针对twitter，需手动复制链接搜索解析"
+    },{
+        name: douyin + "抖音去水印解析",
+        url: "https://cydialmg.1jjs.com/douyin/parse/?kw=",
+        title: "针对抖音，需手动复制链接搜索解析"
+    },{
+        name: weibo + "iiilab微博视频解析下载",
+        url: "https://weibo.iiilab.com/?=",
+        title: "需手动复制链接搜索解析，支持解析新浪微博、秒拍、小咖秀、晃咖视频"
+    }];
+
+
+
+//添加链接
+
+function createSelect(apis) {
+    var myul1 = document.createElement("ul");
+    myul1.id = "myul1";
+    myul1.setAttribute("style",
+        "display:none;background:#fff;box-shadow:0px 1px 10px rgba(0,0,0,0.3);margin:0;padding:0 4.2vw;position:fixed;bottom:27vh;right:6vw;z-index:99999;height:70vh;overflow:scroll;border-radius:1.26vw;");
+    for (var i = 0; i < apis.length; i++) {
+        var myli1 = document.createElement("li");
+        var that1 = this;
+        myli1.setAttribute("style",
+            "margin:0;padding:0;display:block;list-style:none;font-size:3.5vw;width:30.6vw;text-align:left;line-height:8.5vw;letter-spacing:0;border-bottom:1px solid #f0f0f0;position:relative;overflow:hidden;text-overflow:hidden;white-space:nowrap;");
+        (function (num) {
+            myli1.onclick = function () {
+                window.open(apis[num].url + location.href, '_blank');
+            };
+            myli1.ontouchstart = function () {
+                this.style.cssText += "color:yellow;background:#373737;border-radius:1.26vw;";
+            }
+            myli1.ontouchend = function () {
+                this.style.cssText += "color:black;background:transparent;border-radius:0;";
+            }
+        })(i);
+        myli1.innerHTML = apis[i].name;
+        myul1.appendChild(myli1);
+    }
+    document.body.appendChild(myul1);
+}
+
+//唤出菜单
+
+function createMenu() {
+    var myBtn1 = document.createElement("div");
+    myBtn1.id = "myBtn1";
+    myBtn1.innerHTML = "㊦";
+/*
+    myBtn1.innerHTML = "↯";
+    myBtn1.innerHTML = "✿";
+    myBtn1.innerHTML = "✯";
+    myBtn1.innerHTML = "❁";
+    myBtn1.innerHTML = "Ⓓ";
+    myBtn1.innerHTML = "♛";
+    myBtn1.innerHTML = "⇊";
+    myBtn1.innerHTML = "㊦";
+*/
+    myBtn1.setAttribute("style",
+     "width:10vw;height:10vw;position:fixed;bottom:20vh;right:6vw;z-index:100000;border-radius:100%;text-align:center;line-height:10vw;box-shadow:0px 1px 10px rgba(0,0,0,0.3);font-size:6vw;background:#fff;");
+    myBtn1.onclick = function () {
+        var myul1 = document.getElementById("myul1");
+        if (myul1.style.display == "none") {
+            myul1.style.display = "block";
+            this.style.transform = "rotateZ(45deg)";
+        } else {
+            myul1.style.display = "none";
+            this.style.transform = "rotateZ(0deg)";
+        }
+    }
+    document.body.appendChild(myBtn1);
+}
+/*document.addEventListener("DOMContentLoaded",function () {
+	createMenu();
+	createSelect(apis);
+});*/
+
+if (location.href.match("v.qq.com") || location.href.match("film.qq.com") || 
+location.href.match("bilibili.com") || 
+location.href.match("tudou.com") || 
+location.href.match("56.com") || location.href.match(".iqiyi.com") || location.href.match(".youku.com") || location.href.match(".le.com") ||
+    location.href.match(".letv.com") ||
+    location.href.match(".mgtv.com") || location.href.match("film.sohu.com") || location.href.match("tv.sohu.com") ||
+    location.href.match(".acfun.cn") || location.href.match(".pptv.com") ||
+    location.href.match("vip.1905.com") || location.href.match(".yinyuetai.com") || location.href.match(".fun.tv") ||
+location.href.match(".wasu.cn") || 
+location.href.match("weibo.cn") || 
+location.href.match("m.weibo.cn") ||
+location.href.match("weibo.com") ||
+location.href.match("weico.cc") ||
+location.href.match("miaopai.com") ||location.href.match("m.miaopai.com") ||
+location.href.match("meipai.com") ||
+location.href.match("douyin.com") ||
+location.href.match("iesdouyin.com") ||
+location.href.match("tiktok.com") ||
+location.href.match("vm.tiktok.com") ||
+location.href.match("music.163.com") ||location.href.match("sv.baidu.com") ||location.href.match("haokan.baidu.com") ||
+location.href.match("quanmin.baidu.com") ||location.href.match("yoo.qq.com") ||location.href.match("kg.qq.com") ||
+location.href.match("weishi.qq.com") ||
+location.href.match("qzone.qq.com") ||
+location.href.match("weixin.qq.com") ||
+location.href.match("xiaokaxiu.com") ||
+location.href.match("huangka.xiaokaxiu.com") ||location.href.match("kuaishou.com") ||location.href.match("gifshow.com") ||
+location.href.match("huoshan.com") ||
+location.href.match("jianshu.com") ||
+location.href.match("toutiao.com") ||
+location.href.match("ixigua.com") ||location.href.match("pearvideo.com") ||
+location.href.match("xiaohongshu.com") ||
+location.href.match("xiaoying.tv") ||
+location.href.match("ku6.com") ||
+location.href.match("vbbobo.com") ||
+location.href.match("instagram.com") ||location.href.match("youtube.com") ||
+location.href.match("twitter.com") ||
+location.href.match("facebook.com") ||location.href.match("tumblr.com") || 
+location.href.match("video.fc2.com") || 
+location.href.match("instagr.am") || location.href.match("vimeo.com") || 
+location.href.match("pandora.tv") || 
+location.href.match("naver.com") || 
+location.href.match("vlive.tv") || 
+location.href.match("liveleak.com") || location.href.match("youku.com") || 
+location.href.match("tv.sohu.com") || 
+location.href.match("letv.com") || 
+location.href.match("wasu.cn") || 
+location.href.match(".mgtv.com") || 
+location.href.match("krcom.cn") || 
+location.href.match("toutiao.com") || 
+location.href.match(".365yg.com") || 
+location.href.match("acfun.tv") || 
+location.href.match(".kankanews.com") || 
+location.href.match("vlook.cn") || 
+location.href.match("aipai.com") || 
+location.href.match(".v1.cn") || 
+location.href.match("weipai.cn") || 
+location.href.match("2ya.tv") || 
+location.href.match(".kugou.com") || 
+location.href.match(".kuwo.cn") || 
+location.href.match(".tangdou.com") || 
+location.href.match(".boosj.com") || 
+location.href.match("app-echo.com") || 
+location.href.match("djkk.com") || 
+location.href.match(".beva.com") || 
+location.href.match(".sina.com") || 
+location.href.match("news.163.com") ||
+location.href.match("ent.163.com") ||location.href.match("open.163.com") ||location.href.match("v.163.com") ||
+location.href.match(".joy.cn") || 
+location.href.match("baofeng.com") || 
+location.href.match(".kaiyanapp.com") || 
+location.href.match("pps.tv") || 
+location.href.match(".kankan.com") || 
+location.href.match("cntv.cn") || 
+location.href.match(".cctv.com") || 
+location.href.match(".ifeng.com") || 
+location.href.match("jsbc.com") || 
+location.href.match("jstv.com") || 
+location.href.match("item.btime.com") || 
+location.href.match("life.gztv.com") || 
+location.href.match(".cztv.com") || 
+location.href.match("tvscn.com") || 
+location.href.match("tv.tom.com") || 
+location.href.match("union.bokecc.com") || 
+location.href.match("kumi.cn") || 
+location.href.match("edu.51cto.com") || 
+location.href.match("wow.17173.com") || 
+location.href.match("v.game.sohu.com") || 
+location.href.match("zhangmen.baidu.com") || 
+location.href.match("top100.cn") || 
+location.href.match("1ting.com") || 
+location.href.match("kugou.com") || 
+location.href.match("wat.tv") || 
+location.href.match("tv.esl.eu") || 
+location.href.match("5min.com") || 
+location.href.match("howcast.com") || 
+location.href.match("v.61.com") || 
+location.href.match("91porn.com") || 
+location.href.match(".91porn.com") ||
+location.href.match("t9k.space")|| 
+location.href.match("pornhub.com") || 
+location.href.match("xvideos.com") || 
+location.href.match("youporn.com")) {
+    createMenu();
+    createSelect(apis);
+}
