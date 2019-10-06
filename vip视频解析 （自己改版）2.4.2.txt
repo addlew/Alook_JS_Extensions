@@ -1,0 +1,510 @@
+vip视频解析 （自己改版）2.4.2
+
+/*
+2.4.2：字体从font-size: 4.2vw缩小到font-size: 3.5vw；
+            行的高度缩小，改动代码：
+margin:3.78vw 2.1vw变成了margin:1vw 1vw。
+从line-height: 12.6vw缩小到line-height: 7.1vw。
+
+每行高度=圆圈的高度+边距*2+0.5左右，比如这里
+7.1=5+1*2+0.1=7.1
+
+2.4.1：为了减少代码臃肿，去掉了视频解析下载功能的代码；
+            外观代码稍作修改。
+2.3.1：增加视频解析下载站
+*/
+
+var qq =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#0078FF;margin:1vw 1vw;">腾讯</span>'
+
+var iqiyi =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#42BA78;margin:1vw 1vw;">爱奇</span>'
+
+var m3u8 =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#298591;margin:1vw 1vw;">m3u</span>'
+/*
+给综合类加了nothing1、2、3，数字越小，解析接口越好。nothing后面没数字是最好
+*/
+var nothing1 =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#580203;margin:1vw 1vw;">综合1</span>'
+
+var nothing2 =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#1D4121;margin:1vw 1vw;">综合2</span>'
+
+var nothing3 =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#BE1324;margin:1vw 1vw;">综合3</span>'
+
+var nothing =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:#FFA644;margin:1vw 1vw;">综合</span>'
+/*
+var nothing =
+    '<span style="display:block;float:left;width:5vw;height:5vw;font-size:2.5vw;color:#fff;line-height:5vw;text-align:center;border-radius:100%;box-shadow:0px 0px 3px #a9a9a9;background:transparent;margin:3.78vw 2.1vw;">综合</span>'
+*/
+
+
+var apis = [{
+        name: nothing + "m1907①",
+        url: "https://z1.m1907.cn/?jx=",
+        title: "综合接口，后面接视频链接或名称"
+    }, {
+        name: nothing + "m1907②",
+        url: "http://z1.m1907.cn/?jx=",
+        title: "综合接口"
+    }, {
+        name: nothing + "BL解析",
+        url: "https://vip.bljiex.com/?v=",
+        title: "综合接口，后面接视频链接或名称"
+    },{
+        name: nothing + "第九影院",
+        url: "http://v.d9y.net/vip/?url=",
+        title: "综合接口"
+    },{
+        name: nothing + "我爱解析",
+        url: "http://api.ledboke.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing + "98高清",
+        url: "http://jx.98a.ink/?url=",
+        title: "综合接口"
+    },{
+        name: nothing + "知网青年",
+        url: "http://www.xyyh.xyz/zwjx/?url=",
+        title: "综合接口"
+    }, {
+        name: nothing + "一个五超清",
+        url: "https://jx.yg5.net/Svip/?v=",
+        title: "综合接口"
+    },{
+        name: nothing + "TV920解析（带切换线路版本）",
+        url: "https://api.tv920.com/vip/?url=",
+        title: "综合接口"
+    },{
+        name: nothing + "TV920解析（无切换线路版本）",
+        url: "https://api.tv920.com/jx/?url=",
+        title: "综合接口"
+    },{
+        name: nothing + "百域阁1",
+        url: "http://jx.618g.com/?url=",
+        title: "转圈圈就换线路"
+    }, {
+        name: nothing + "百域阁2",
+        url: "https://jx.618g.com/?url=",
+        title: "转圈圈就换线路"
+    },{
+        name: nothing + "HK智能解析",
+        url: "http://jx.rdhk.net/?url=",
+        title: "综合接口"
+    },{
+        name: nothing + "豪华啦云解析",
+        url: "http://api.lhh.la/vip/?url=",
+        title: "综合接口"
+    },{
+        name: nothing + "无名小站",
+        url: "http://www.sfsft.com/admin.php?url=",
+        title: "无名小站同源"
+    }, {
+        name: nothing + "无名小站1",
+        url: "https://www.administratorw.com/admin.php?url=",
+        title: "无名小站同源"
+    },{
+        name: nothing + "无名小站2",
+        url: "https://www.administratorw.com/video.php?url=",
+        title: "转圈圈就换线路"
+    },{
+        name: nothing + "70808解析",
+        url: "http://jx.70808.net/?url=",
+        title: "综合接口"
+    },{
+        name: nothing + "18云",
+        url: "http://api.nobij.top/jx/?url=",
+        title: "综合接口"
+    },{
+        name: nothing + "思古",
+        url: "https://api.sigujx.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing + "69ne",
+        url: "http://api.69ne.com/?url=",
+        title: "综合接口"
+    }, {
+        name: nothing + "xyz视频",
+        url: "http://vipjx.pyhj.net/?url=",
+        title: "综合接口"
+    }, {
+        name: nothing + "小蒋极致云解析",
+        url: "https://www.kpezp.cn/jlexi.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "tmsup",
+        url: "http://svip.tmsup.cn/?v=",
+        title: "综合接口"
+    }, {
+        name: nothing1 + "性情小哥哥",
+        url: "https://sp.xggapp.com/?v=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "新视频h5",
+        url: "https://www.myxin.top/jx/api/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "流氓凡",
+        url: "https://jx.wslmf.com/?url=",
+        title: "综合接口"
+    }, {
+        name: nothing1 + "52a",
+        url: "http://jx.52a.ink/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "飞鸟解析",
+        url: "http://api.ledboke.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "飞鸟解析1",
+        url: "http://jx.ledboke.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "我爱解析2",
+        url: "http://jx.98a.ink/vip/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "duplay智能视频",
+        url: "http://jx.du2.cc/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "AT解析",
+        url: "http://at520.cn/jx/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "吾爱视频解析",
+        url: "https://jx.3aym.cn/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "618g",
+        url: "http://jx.618g.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "baiyug",
+        url: "http://api.baiyug.vip/index.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "狂野解析",
+        url: "https://api.653520.top/vip/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "19g",
+        url: "http://19g.top/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "660e解析",
+        url: "https://660e.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "6080云解析",
+        url: "https://jx.99yyw.com/99/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "盈余解析",
+        url: "http://api.xyingyu.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "CKMOV智能解析系统",
+        url: "https://www.ckmov.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "XyPlayer 智能解析 X3",
+        url: "http://v.wdmov.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "金桥解析",
+        url: "http://jqaaa.com/jx.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "修瑶聚合云解析",
+        url: "http://api.xiuyao.me/jx/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "爱解析",
+        url: "http://api.ijx.xyz/?v=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "影视解析1",
+        url: "https://cdn.yangju.vip/k/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "影视解析2",
+        url: "http://cdn.yangju.vip/k/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "智能视频解析1",
+        url: "http://api.smq1.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "智能视频解析2",
+        url: "https://api.smq1.com/?url=",
+        title: "综合接口"
+    }, {
+        name: nothing1 + "116kan",
+        url: "http://vip.116kan.com/?url=",
+        title: "综合接口"
+    }, {
+        name: nothing1 + "hezeshi",
+        url: "https://jx.hezeshi.net/ce/jlexi.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "范特尔解析",
+        url: "https://www.fantee.net/fantee/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "beac解析1",
+        url: "http://beaacc.com/api.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "beac解析2",
+        url: "https://beaacc.com/api.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "17kyun",
+        url: "http://17kyun.com/api.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "1717yun",
+        url: "http://www.1717yun.com/jx/ty.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "40解析",
+        url: "https://jx40.net/url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "69p",
+        url: "http://69p.top/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "74t",
+        url: "http://74t.top/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "mimijiexi",
+        url: "http://mimijiexi.top/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "55jx",
+        url: "http://55jx.top/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "605云",
+        url: "https://www.ppf8.com/605yun.php?url=",
+        title: "605资源网在线解析"
+    },{
+        name: m3u8 + "605云m3u8解析接口",
+        url: "https://www.ppf8.com/605m3u8.php?url=",
+        title: "605资源网m3u8解析接口"
+    },{
+        name: m3u8 + "秒播资源网m3u8接口",
+        url: "https://api.mb999.vip/index.php?url=",
+        title: "秒播资源网m3u8接口：PHP版P2P播放器"
+    },{
+        name: nothing1 + "playx",
+        url: "http://playx.top/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "nitian9",
+        url: "http://nitian9.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "紫云智能",
+        url: "https://api.smq1.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "人人解析",
+        url: "https://vip.mpos.ren/v/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "新视频h5解析",
+        url: "https://www.myxin.top/jx/api.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "音萌云解析1",
+        url: "http://api.v6.chat/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "音萌云解析2",
+        url: "https://api.v6.chat/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "穷二代视频解析",
+        url: "http://jx.ejiafarm.com/dy.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "优创智能",
+        url: "http://j.iuczy.cn/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "598110-1",
+        url: "http://jx.598110.com/index.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "598110-2",
+        url: "http://jx.598110.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing2 + "盒子君皮皮解析",
+        url: "http://www.hzjun.xyz/?url=",
+        title: "综合接口"
+    },{
+        name: nothing2 + "石雲",
+        url: "http://jiexi.071811.cc/jx.php?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "drgxj",
+        url: "http://jx.drgxj.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "黑云解析1",
+        url: "https://jx.daheiyun.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "黑云解析2",
+        url: "https://jiexi.380k.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "180解析",
+        url: "https://jx.000180.top/jx/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "ab33解析",
+        url: "https://jx.ab33.top/vip/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "58解析",
+        url: "https://jx.km58.top/jx/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "桔梗解析",
+        url: "https://jx.itaoju.top/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "lache解析",
+        url: "https://jx.lache.me/cc/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "jlsprh解析",
+        url: "https://vip.jlsprh.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing1 + "全民VIP解析",
+        url: "https://www.bavei.com/vip/?url=",
+        title: "综合接口"
+    },{
+        name: "———分割线———",
+        url: "",
+        title: "分割线，下面的点击直播弹出播放页面播放，下面的弹出解析主页，还要点击"
+    }, {
+        name: nothing3 + "刘明野VIP解析",
+        url: "http://lab.liumingye.cn/video/?url=",
+        title: "综合接口"
+    }, {
+        name: nothing3 + "小良",
+        url: "https://ae85.cn/zx.html?url=",
+        title: "综合接口"
+    }, {
+        name: nothing3 + "零秒哥",
+        url: "http://www.cydialmg.cc/vip/?url=",
+        title: "综合接口"
+    },{
+        name: nothing3 + "视爆网",
+        url: "http://tv.visionbang.com/?url=",
+        title: "综合接口"
+    },{
+        name: nothing3 + "Hwk小康",
+        url: "http://tv.hwkxk.cn/?url=",
+        title: "综合接口"
+    }, {
+        name: nothing3 + "搜你妹",
+        url: "https://www.sounm.com/?url=",
+        title: "综合接口"
+    },{
+        name: qq + "vParse",
+        url: "https://api.vparse.org/?url=",
+        title: "支持腾讯"
+    }, {
+        name: qq + "猫云",
+        url: "https://jx.maoyun.tv/index.php?id=",
+        title: "支持腾讯"
+    },{
+        name: nothing3 + "石头解析",
+        url: "https://jiexi.071811.cc/jx.php?url=",
+        title: "手动点播放"
+    }, {
+        name: nothing3 + "163人",
+        url: "http://jx.api.163ren.com/vod.php?url=",
+        title: "偶尔支持腾讯"
+    },{
+        name: nothing3 + "眼睛会下雨",
+        url: "wq114.org:88/yun.php?url=",
+        title: "www.vipjiexi.com"
+    }];
+
+
+//添加链接
+
+function createSelect(apis) {
+    var myul = document.createElement("ul");
+    myul.id = "myul";
+    myul.setAttribute("style",
+        "display:none;background:#fff;box-shadow:0px 1px 10px rgba(0,0,0,0.3);margin:0;padding:0 4.2vw;position:fixed;bottom:17vh;right:6vw;z-index:99999;height:70vh;overflow:scroll;border-radius:1.26vw;");
+    for (var i = 0; i < apis.length; i++) {
+        var myli = document.createElement("li");
+        var that = this;
+        myli.setAttribute("style",
+            "margin:0;padding:0;display:block;list-style:none;font-size:3.5vw;width:30.6vw;text-align:left;line-height:7.1vw;letter-spacing:0;border-bottom:1px solid #f0f0f0;position:relative;overflow:hidden;text-overflow:hidden;white-space:nowrap;");
+        (function (num) {
+            myli.onclick = function () {
+                window.open(apis[num].url + location.href, '_blank');
+            };
+            myli.ontouchstart = function () {
+                this.style.cssText += "color:yellow;background:#373737;border-radius:1.26vw;";
+            }
+            myli.ontouchend = function () {
+                this.style.cssText += "color:black;background:transparent;border-radius:0;";
+            }
+        })(i);
+        myli.innerHTML = apis[i].name;
+        myul.appendChild(myli);
+    }
+    document.body.appendChild(myul);
+}
+
+//唤出菜单
+
+function createMenu() {
+    var myBtn = document.createElement("div");
+    myBtn.id = "myBtn";
+    myBtn.innerHTML = "";
+    myBtn.setAttribute("style",
+     "width:10vw;height:10vw;position:fixed;bottom:10vh;right:6vw;z-index:100000;border-radius:100%;text-align:center;line-height:10vw;box-shadow:0px 1px 10px rgba(0,0,0,0.3);font-size:6vw;background:#fff;");
+    myBtn.onclick = function () {
+        var myul = document.getElementById("myul");
+        if (myul.style.display == "none") {
+            myul.style.display = "block";
+            this.style.transform = "rotateZ(45deg)";
+        } else {
+            myul.style.display = "none";
+            this.style.transform = "rotateZ(0deg)";
+        }
+    }
+    document.body.appendChild(myBtn);
+}
+/*document.addEventListener("DOMContentLoaded",function () {
+	createMenu();
+	createSelect(apis);
+});*/
+if (location.href.match(".iqiyi.com") || location.href.match(".youku.com") || location.href.match(".le.com") ||
+    location.href.match(".letv.com") || location.href.match("v.qq.com") || location.href.match("film.qq.com") || location.href.match(".tudou.com") ||
+    location.href.match(".mgtv.com") || location.href.match("film.sohu.com") || location.href.match("tv.sohu.com") ||
+    location.href.match(".acfun.cn") || location.href.match(".bilibili.com") || location.href.match(".pptv.com") ||
+    location.href.match("vip.1905.com") || location.href.match(".yinyuetai.com") || location.href.match(".fun.tv") ||
+    location.href.match(".56.com") || 
+location.href.match(".wasu.cn")) {
+    createMenu();
+    createSelect(apis);
+}
