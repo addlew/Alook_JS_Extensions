@@ -1,0 +1,7 @@
+{
+  "code" : "LyrlvIDlj5HogIXosIPor5Xlt6XlhbcqL3ZhciBvSGVhZDEwMDcgPSBkb2N1bWVudC5nZXRFbGVtZW50c0J5VGFnTmFtZSgnYm9keScpLml0ZW0oMCk7IHZhciBvU2NyaXB0MTAwNyA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoInNjcmlwdCIpOyBvU2NyaXB0MTAwNy50eXBlID0gInRleHQvamF2YXNjcmlwdCI7IG9TY3JpcHQxMDA3LnNyYz0iaHR0cDovL2RhdGFzdC5xaW5pdWRuLmNvbS9qcy92Q29uc29sZS5qcyI7IG9IZWFkMTAwNy5hcHBlbmRDaGlsZCggb1NjcmlwdDEwMDcpOw==",
+  "name" : "网页调试工具",
+  "runat" : 0,
+  "match" : 1,
+  "regex" : "*"
+}
